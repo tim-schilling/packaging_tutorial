@@ -1,0 +1,75 @@
+name: Build release
+
+on:
+  push:
+    branches:
+    - master
+    tags:
+    - 'v*'
+  pull_request:
+
+jobs:
+  release:
+    name: Build release
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.4
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 2.7
+
+    - name: Set up QEMU
+      # For cross-architecture builds
+      # https://cibuildwheel.readthedocs.io/en/stable/faq/#emulation
+      if: runner.os == 'Linux'
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: all
+
+    - name: Install packaging tools
+      run: |
+        python2.7 -m pip install --upgrade pip setuptools wheel
+        python3.9 -m pip install --upgrade "cibuildwheel<2.0.0" pip setuptools twine wheel
+
+    - name: Build sdist
+      run: python3.9 setup.py sdist
+
+    - name: Build Python 2 pure Python wheel
+      run: python2.7 setup.py bdist_wheel
+
+    - name: Build Python 3 pure Python wheel
+      env:
+        BUILD_DISABLE_EXTENSIONS: "1"
+      run: python3.9 setup.py bdist_wheel
+
+    - name: Build binary wheels
+      env:
+        # Disable for platforms where pure Python wheels would be generated
+        CIBW_ARCHS_LINUX: "auto aarch64"
+        CIBW_BUILD_VERBOSITY: 1
+        CIBW_SKIP: "cp27-* pp27-* pp36-* pp37-*"
+      run: cibuildwheel
+
+    - name: Check packages
+      run: twine check dist/* wheelhouse/*
+
+    - name: List files
+      run: ls -al dist wheelhouse
+
+    - name: Release
+      if: startsWith(github.event.ref, 'refs/tags')
+      env:
+        TWINE_NON_INTERACTIVE: 1
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+      run: twine upload --repository testpypi --skip-existing dist/* wheelhouse/*
