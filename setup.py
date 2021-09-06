@@ -32,7 +32,7 @@ else:
 
 setup(
     name="packaging-tutorial-tim-schilling",
-    version="0.0.1",
+    version="0.0.2",
     author="Tim Schilling",
     author_email="schillingt@better-simple.com",
     description="A small example package",
