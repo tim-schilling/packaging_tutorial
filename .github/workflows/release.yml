@@ -18,6 +18,19 @@ jobs:
         python: [3.9]
         cibuildwheel_version: ["cibuildwheel"]
         cibw_build: ["*-*"]
+        cibw_platform: ["auto"]
+        include:
+          - os: ubuntu-18.04
+            python: 3.4
+            cibuildwheel_version: "cibuildwheel<1.0.0"
+            cibw_build: "cp34-*"
+            # Need to specify the platform as github actions isn't auto-detected in
+            # the pre-v1 version.
+            cibw_platform: "linux"
+          - os: ubuntu-18.04
+            python: 3.5
+            cibuildwheel_version: "cibuildwheel<2.0.0"
+            cibw_build: "cp35-*"
 
     steps:
       - uses: actions/checkout@v2
@@ -46,6 +59,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_SKIP: "cp27-* pp27-* pp36-* pp37-*"
           CIBW_BUILD: ${{ matrix.cibw_build }}
+          CIBW_PLATFORM: ${{ matrix.cibw_platform }}
         run: cibuildwheel
 
       - uses: actions/upload-artifact@v2
