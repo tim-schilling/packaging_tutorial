@@ -10,7 +10,7 @@ on:
 
 jobs:
   cibuildwheel:
-    name: Build wheels on ${{ matrix.os }} with py${{ matrix.python}}
+    name: Build ${{ matrix.cibw_build }} wheels
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -22,14 +22,14 @@ jobs:
         include:
           - os: ubuntu-18.04
             python: 3.4
-            cibuildwheel_version: "cibuildwheel<1.0.0"
+            cibuildwheel_version: "cibuildwheel==0.12.0"
             cibw_build: "cp34-*"
             # Need to specify the platform as github actions isn't auto-detected in
             # the pre-v1 version.
             cibw_platform: "linux"
           - os: ubuntu-18.04
-            python: 3.5
-            cibuildwheel_version: "cibuildwheel<2.0.0"
+            python: 3.9
+            cibuildwheel_version: "cibuildwheel==1.12.0"
             cibw_build: "cp35-*"
 
     steps:
