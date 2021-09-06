@@ -28,7 +28,7 @@ jobs:
             # the pre-v1 version.
             cibw_platform: "linux"
           - os: ubuntu-18.04
-            python: 3.5
+            python: 3.9
             cibuildwheel_version: "cibuildwheel==1.12.0"
             cibw_build: "cp35-*"
 
