@@ -46,15 +46,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade "${{matrix.cibuildwheel_version}}"
 
-      - name: Set up QEMU
-        # For cross-architecture builds
-        # https://cibuildwheel.readthedocs.io/en/stable/faq/#emulation
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: all
-      - name: Build sdist
-        run: python setup.py sdist
       - name: Build binary wheels
         env:
           # Disable for platforms where pure Python wheels would be generated
