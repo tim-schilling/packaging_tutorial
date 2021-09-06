@@ -24,13 +24,14 @@ jobs:
             python: 3.4
             cibuildwheel_version: "cibuildwheel==0.12.0"
             cibw_build: "cp34-*"
-            # Need to specify the platform as github actions isn't auto-detected in
-            # the pre-v1 version.
+            # Need to specify linux as the platform since github actions
+            # isn't auto-detected in the pre-v1 version.
             cibw_platform: "linux"
           - os: ubuntu-18.04
             python: 3.9
             cibuildwheel_version: "cibuildwheel==1.12.0"
             cibw_build: "cp35-*"
+            cibw_platform: "auto"
 
     steps:
       - uses: actions/checkout@v2
