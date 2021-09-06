@@ -10,7 +10,7 @@ on:
 
 jobs:
   cibuildwheel:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build wheels on ${{ matrix.os }} with py${{ matrix.python}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,15 +18,6 @@ jobs:
         python: [3.9]
         cibuildwheel_version: ["cibuildwheel"]
         cibw_build: ["*-*"]
-        include:
-          - os: ubuntu-18.04
-            python: 3.4
-            cibuildwheel_version: "cibuildwheel<1.0.0"
-            cibw_build: "cp34-*"
-          - os: ubuntu-18.04
-            python: 3.5
-            cibuildwheel_version: "cibuildwheel<2.0.0"
-            cibw_build: "cp35-*"
 
     steps:
       - uses: actions/checkout@v2
