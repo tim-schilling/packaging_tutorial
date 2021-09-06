@@ -17,16 +17,16 @@ jobs:
         os: [ ubuntu-latest ]
         python: [3.9]
         cibuildwheel_version: ["cibuildwheel"]
-        CIBW_BUILD: ["*-*"]
+        cibw_build: ["*-*"]
         include:
-          - os: [ubuntu-18.04]
-            python: [3.4]
-            cibuildwheel_version: ["cibuildwheel<1.0.0"]
-            CIBW_BUILD: ["cp34-*"]
-          - os: [ubuntu-18.04]
-            python: [3.5]
-            cibuildwheel_version: ["cibuildwheel<2.0.0"]
-            CIBW_BUILD: ["cp35-*"]
+          - os: ubuntu-18.04
+            python: 3.4
+            cibuildwheel_version: "cibuildwheel<1.0.0"
+            cibw_build: "cp34-*"
+          - os: ubuntu-18.04
+            python: 3.5
+            cibuildwheel_version: "cibuildwheel<2.0.0"
+            cibw_build: "cp35-*"
 
     steps:
       - uses: actions/checkout@v2
@@ -54,7 +54,7 @@ jobs:
           CIBW_ARCHS_LINUX: "auto aarch64"
           CIBW_BUILD_VERBOSITY: 1
           CIBW_SKIP: "cp27-* pp27-* pp36-* pp37-*"
-          CIBW_BUILD: ${{matrix.CIBW_BUILD}}
+          CIBW_BUILD: ${{ matrix.cibw_build }}
         run: cibuildwheel
 
       - uses: actions/upload-artifact@v2
